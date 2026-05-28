@@ -3,8 +3,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $client = new Google_Client();
 
-$client->setClientId("211181652280-4h9nbrjo0rums3nm3elflmh90ia5kfv5.apps.googleusercontent.com");
-$client->setClientSecret("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");
+$client->setClientId("211181652280-mmom61lu3mfi2jn6hhjq0qft13n0tgih.apps.googleusercontent.com");
+$client->setClientSecret("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");
 
 $client->setRedirectUri("http://localhost/IS35126Group1/google-callback.php");
 
