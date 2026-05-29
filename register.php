@@ -6,9 +6,33 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 include 'db.php';
-?>
 
-<?php include 'db.php'; ?>
+$message = "";
+
+if (isset($_POST['register'])) {
+
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed");
+    }
+
+    $name = htmlspecialchars($_POST['name']);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role = "student";
+
+    $check = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $check->execute([$email]);
+
+    if ($check->rowCount() > 0) {
+        $message = "Email already exists.";
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$name, $email, $password, $role]);
+
+        $message = "Registration Successful!";
+    }
+}
+?>
 
 <h2>Student Registration</h2>
 
@@ -29,32 +53,7 @@ include 'db.php';
 
 </form>
 
-<?php
-
-if (isset($_POST['register'])) {
-
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("CSRF token validation failed");
-}
-
-    $name = htmlspecialchars($_POST['name']);
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    $role = "student";
-
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
-
-    $stmt->bind_param("ssss", $name, $email, $password, $role);
-
-    if ($stmt->execute()) {
-
-        echo "Registration Successful!";
-
-    } else {
-
-        echo "Registration Failed.";
+<p><?php echo $message; ?></p>
 
     }
 }
