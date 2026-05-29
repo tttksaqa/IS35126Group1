@@ -1,19 +1,17 @@
 <?php
-$host = getenv("MYSQLHOST");
-$db   = getenv("MYSQLDATABASE");
-$user = getenv("MYSQLUSER");
-$pass = getenv("MYSQLPASSWORD");
-$port = getenv("MYSQLPORT");
-
 try {
-    $pdo = new PDO(
-        "mysql:host=$host;port=$port;dbname=$db",
-        $user,
-        $pass
-    );
-
+    $pdo = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT UNIQUE,
+            password TEXT,
+            role TEXT DEFAULT 'student'
+        );
+    ");
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
