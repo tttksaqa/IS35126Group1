@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include 'db.php';
+
 if (!isset($_SESSION['login_attempts'])) {
     $_SESSION['login_attempts'] = 0;
 }
@@ -8,8 +10,6 @@ if (!isset($_SESSION['login_attempts'])) {
 if ($_SESSION['login_attempts'] >= 5) {
     die("Too many failed login attempts.");
 }
-
-include 'db.php';
 
 $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 $password = $_POST['password'];
@@ -41,16 +41,12 @@ if ($result->num_rows === 1) {
         exit();
 
     } else {
-
         $_SESSION['login_attempts']++;
-        
         echo "Wrong Password";
-
     }
 
 } else {
-
     echo "User Not Found";
-
 }
 ?>
+
