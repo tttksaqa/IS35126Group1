@@ -1,15 +1,15 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
-    die("Access Denied");
+if (!isset($_SESSION['user_id']) || 
+    !isset($_SESSION['role']) || 
+    $_SESSION['role'] !== 'admin' || 
+    !isset($_SESSION['otp_verified']) || 
+    $_SESSION['otp_verified'] !== true) {
+    
+    header("Location: login.php");
+    exit();
 }
-?>
-
-
-
-<?php
-session_start();
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +21,8 @@ session_start();
 
 <h1>Welcome Admin Dashboard</h1>
 
-<p>You are successfully logged in as Admin.</p>
+<p>Hello, <?php echo $_SESSION['name']; ?></p>
+<p>Your role is: <?php echo $_SESSION['role']; ?></p>
 
 <a href="logout.php">Logout</a>
 
