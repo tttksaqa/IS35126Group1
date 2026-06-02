@@ -15,14 +15,11 @@ $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 $password = $_POST['password'];
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
+$stmt->execute([$email]);
 
-$result = $stmt->get_result();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows === 1) {
-
-    $user = $result->fetch_assoc();
+if ($user) {
 
     if (password_verify($password, $user['password'])) {
 
@@ -50,3 +47,4 @@ if ($result->num_rows === 1) {
 }
 ?>
 
+      
