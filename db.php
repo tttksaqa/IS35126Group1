@@ -1,21 +1,27 @@
 <?php
 
-$host = getenv('MYSQLHOST');
-$dbname = getenv('MYSQLDATABASE');
-$user = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
-$port = getenv('MYSQLPORT');
+$url = getenv("MYSQL_PUBLIC_URL");
+
+if (!$url) {
+    die("Database connection failed: MYSQL_PUBLIC_URL is missing");
+}
+
+$parts = parse_url($url);
+
+$host = $parts["host"];
+$user = $parts["user"];
+$password = $parts["pass"];
+$database = ltrim($parts["path"], "/");
+$port = $parts["port"];
 
 try {
     $conn = new PDO(
-        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
+        "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4",
         $user,
-        $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
-        ]
+        $password
     );
+
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
