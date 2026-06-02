@@ -1,49 +1,15 @@
 <?php
-try {
-    $pdo = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Users Table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            email TEXT UNIQUE,
-            password TEXT,
-            role TEXT DEFAULT 'student'
-        );
-    ");
+$host = getenv("MYSQLHOST");
+$user = getenv("MYSQLUSER");
+$password = getenv("MYSQLPASSWORD");
+$database = getenv("MYSQLDATABASE");
+$port = getenv("MYSQLPORT");
 
-    // Courses Table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS courses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            course_name TEXT,
-            course_code TEXT
-        );
-    ");
+$conn = new mysqli($host, $user, $password, $database, $port);
 
-    // Enrollments Table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS enrollments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            course_id INTEGER,
-            enrolled_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-    ");
-
-    // Audit Logs Table
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS audit_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_email TEXT,
-            action TEXT,
-            log_time DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-    ");
-
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
 }
+
 ?>
