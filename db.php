@@ -1,14 +1,21 @@
 <?php
 
-$host = getenv("MYSQLHOST");
-$user = getenv("MYSQLUSER");
-$password = getenv("MYSQLPASSWORD");
-$database = getenv("MYSQLDATABASE");
-$port = getenv("MYSQLPORT");
+$host = getenv('MYSQLHOST');
+$dbname = getenv('MYSQLDATABASE');
+$user = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
+$port = getenv('MYSQLPORT');
 
-$conn = new mysqli($host, $user, $password, $database, $port);
+try {
+    $conn = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
+        $user,
+        $password
+    );
 
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
 ?>
