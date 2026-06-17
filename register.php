@@ -20,13 +20,13 @@ if (isset($_POST['register'])) {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = "student";
 
-    $check = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $check = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $check->execute([$email]);
 
     if ($check->rowCount() > 0) {
         $message = "Email already exists.";
     } else {
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $password, $role]);
 
         $message = "Registration Successful!";
