@@ -37,8 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <h2>Enter OTP</h2>
 
-<p><strong>Test OTP:</strong> <?php echo $_SESSION['otp_code']; ?></p>
-
 <form method="POST">
     <label>OTP Code:</label><br>
     <input type="text" name="otp" required><br><br>
