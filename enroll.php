@@ -1,17 +1,15 @@
 <?php
-include 'db.php';
+session_start();
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'student') {
+    die("Access Denied");
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $course = htmlspecialchars($_POST['course']);
 
-    $student_name = $_POST['student_name'];
-    $email = $_POST['email'];
-    $course = $_POST['course'];
-
-    $stmt = $pdo->prepare("INSERT INTO enrollments (student_name, email, course)
-                           VALUES (?, ?, ?)");
-
-    $stmt->execute([$student_name, $email, $course]);
-
-    echo "Enrollment Successful";
+    echo "<h2>Enrollment Submitted</h2>";
+    echo "<p>You have successfully submitted enrollment for: <strong>$course</strong></p>";
+    echo "<a href='student-dashboard.php'>Back to Dashboard</a>";
 }
 ?>
