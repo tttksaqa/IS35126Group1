@@ -1,7 +1,11 @@
 <?php
 session_start();
-
 include 'db.php';
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: login.php");
+    exit();
+}
 
 if (!isset($_SESSION['login_attempts'])) {
     $_SESSION['login_attempts'] = 0;
@@ -16,35 +20,26 @@ $password = $_POST['password'];
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 $stmt->execute([$email]);
-
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($user) {
+if ($user && password_verify($password, $user['password'])) {
 
-    if (password_verify($password, $user['password'])) {
+    session_regenerate_id(true);
 
-        session_regenerate_id(true);
+    $_SESSION['login_attempts'] = 0;
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['name'] = $user['name'];
+    $_SESSION['role'] = $user['role'];
 
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['name'] = $user['name'];
-        $_SESSION['role'] = $user['role'];
+    $otp = rand(100000, 999999);
+    $_SESSION['otp_code'] = $otp;
+    $_SESSION['otp_verified'] = false;
 
-        $otp = rand(100000, 999999);
-        $_SESSION['otp_code'] = $otp;
-        $_SESSION['otp_verified'] = false;
-
-        echo "Your OTP code is: " . $otp;
-        echo "<br><a href='otp.php'>Enter OTP</a>";
-        exit();
-
-    } else {
-        $_SESSION['login_attempts']++;
-        echo "Wrong Password";
-    }
+    header("Location: otp.php");
+    exit();
 
 } else {
-    echo "User Not Found";
+    $_SESSION['login_attempts']++;
+    echo "Invalid email or password.";
 }
 ?>
-
-      
