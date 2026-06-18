@@ -29,8 +29,8 @@ if (isset($_GET['code'])) {
         $role = "student";
 
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-
-        $stmt->bind_param("s", $email);
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $stmt->execute();
 
