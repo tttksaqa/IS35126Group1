@@ -6,11 +6,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'student') {
 }
 ?>
 
-
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
