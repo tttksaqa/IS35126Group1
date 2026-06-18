@@ -1,6 +1,9 @@
 <?php
+session_start();
+
 echo "Role = " . $_SESSION['role'];
 exit();
+?>
 
 session_start();
 
