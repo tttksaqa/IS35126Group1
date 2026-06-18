@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'send_otp.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: login.php");
