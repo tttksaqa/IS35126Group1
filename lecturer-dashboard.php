@@ -1,4 +1,7 @@
 <?php
+echo "Role = " . $_SESSION['role'];
+exit();
+
 session_start();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'lecturer') {
